@@ -7,17 +7,16 @@ here = os.path.abspath(os.path.dirname(__file__))
 
 
 class TestPdfFile(unittest.TestCase):
+    def setUp(self):
+        self.test_pdf_filename = os.path.join(here, "data", "pdf", "n2h.pdf")
+        self.test_pdf = PdfFile(self.test_pdf_filename)
 
     def test_init(self):
-        test_pdf_filename = os.path.join(here, "data", "pdf", "n2h.pdf")
-        test_pdf = PdfFile(test_pdf_filename)
-        self.assertEqual(test_pdf.pdf_filename, test_pdf_filename)
-        self.assertEqual(test_pdf.metadata, [])
+        self.assertEqual(self.test_pdf.pdf_filename, self.test_pdf_filename)
+        self.assertEqual(self.test_pdf.metadata, [])
 
     def test_rescue_metadata(self):
-        test_pdf_filename = os.path.join(here, "data", "pdf", "n2h.pdf")
-        test_pdf = PdfFile(test_pdf_filename)
-        metadata = test_pdf.rescue_metadata()
+        metadata = self.test_pdf.rescue_metadata()
         self.assertListEqual(
             metadata,
             [
@@ -28,9 +27,7 @@ class TestPdfFile(unittest.TestCase):
         )
 
     def test_remove_metadata(self):
-        test_pdf_filename = os.path.join(here, "data", "pdf", "n2h.pdf")
-        test_pdf = PdfFile(test_pdf_filename)
-        test_pdf.rescue_metadata()
-        test_pdf.remove_metadata()
-        for metadata in test_pdf.metadata:
-            self.assertEqual(test_pdf.pdf_file.Info[metadata], None)
+        self.test_pdf.rescue_metadata()
+        self.test_pdf.remove_metadata()
+        for metadata in self.test_pdf.metadata:
+            self.assertIsNone(self.test_pdf.pdf_file.Info[metadata])
