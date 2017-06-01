@@ -5,6 +5,7 @@ from nothing2hide.metadata.core.scrubber.pdf import PdfFile
 
 here = os.path.abspath(os.path.dirname(__file__))
 
+
 class TestPdfFile(unittest.TestCase):
 
     def test_init(self):
