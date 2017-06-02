@@ -1,5 +1,7 @@
 import os
+import tempfile
 import unittest
+import shutil
 
 from nothing2hide.metadata.core.scrubber.pdf import PdfFile
 
@@ -31,3 +33,20 @@ class TestPdfFile(unittest.TestCase):
         self.test_pdf.remove_metadata()
         for metadata in self.test_pdf.metadata:
             self.assertIsNone(self.test_pdf.pdf_file.Info[metadata])
+
+    def test_save_newfile(self):
+        test_tmp_file = tempfile.NamedTemporaryFile(delete=False)
+        self.test_pdf.rescue_metadata()
+        self.test_pdf.remove_metadata()
+        self.test_pdf.save(outfile=test_tmp_file.name)
+        tmp_file_metadata = PdfFile(test_tmp_file.name).rescue_metadata()
+        self.assertListEqual(tmp_file_metadata, [])
+        os.remove(test_tmp_file.name)
+
+    def test_save_erase(self):
+        self.test_pdf.rescue_metadata()
+        self.test_pdf.remove_metadata()
+        new_pdf_file_name = self.test_pdf.save()
+        tmp_file_metadata = PdfFile(new_pdf_file_name).rescue_metadata()
+        self.assertListEqual(tmp_file_metadata, [])
+        os.remove(new_pdf_file_name)
