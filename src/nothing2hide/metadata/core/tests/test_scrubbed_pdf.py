@@ -1,7 +1,6 @@
 import os
 import tempfile
 import unittest
-import shutil
 
 from nothing2hide.metadata.core.scrubber.pdf import PdfFile
 
