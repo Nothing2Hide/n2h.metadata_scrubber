@@ -5,6 +5,8 @@
 Remove all metadata from PDF.
 By default, create a new file with named prefixed by « CLEAN_ ».
 """
+import os
+
 import pdfrw
 
 
@@ -31,8 +33,13 @@ class PdfFile:
             if metadata not in exclude:
                 self.pdf_file.Info.pop("/" + metadata)
 
-    def save(self, outfile=None):  # pragma: no cover
-        outfile = outfile if outfile else f"scubbed_{self.pdf_filename}"
+    def save(self, outfile=None):
+        if not outfile:
+            outfile = \
+                    os.path.dirname(self.pdf_filename) + \
+                    "/scrubbed_" + \
+                    os.path.basename(self.pdf_filename)
         pdfrw.PdfWriter().write(fname=outfile, trailer=self.pdf_file)
+        return(outfile)
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
