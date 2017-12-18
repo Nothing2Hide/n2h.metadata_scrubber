@@ -8,6 +8,7 @@ version = '0.1.dev0'
 
 here = os.path.abspath(os.path.dirname(__file__))
 
+
 def read_file(*pathes):
     path = os.path.join(here, *pathes)
     if os.path.isfile(path):
@@ -16,12 +17,13 @@ def read_file(*pathes):
     else:
         return ''
 
+
 desc_files = (('README.rst',), ('docs', 'CHANGES.rst'),
-                ('docs', 'CONTRIBUTORS.rst'))
+              ('docs', 'CONTRIBUTORS.rst'))
 
 long_description = '\n\n'.join([read_file(*pathes) for pathes in desc_files])
 
-install_requires=['pdfrw', 'lxml']
+install_requires = ['pdfrw', 'lxml', 'pillow']
 
 extras_require = {'test': ['setuptools',
                            'pytest',
