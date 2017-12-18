@@ -5,12 +5,12 @@ import zipfile
 import shutil
 from lxml import etree
 
-from nothing2hide.metadata.core.scrubber.docx import DocxFile
+from nothing2hide.metadata.core.scrubber import DocxFile
 
 here = os.path.abspath(os.path.dirname(__file__))
 
 
-class TestPdfFile(unittest.TestCase):
+class TestDocxFile(unittest.TestCase):
 
     def setUp(self):
         test_docx_filename = os.path.join(here, "data", "docx", "test.docx")
@@ -20,20 +20,18 @@ class TestPdfFile(unittest.TestCase):
         self.test_xlsx = DocxFile(test_xlsx_filename)
 
     def test_init(self):
-        self.assertIsNotNone(self.test_docx.xml_content)
-        self.assertIsNotNone(self.test_xlsx.xml_content)
         self.assertRaises(ValueError, DocxFile, self.test_bad_filename)
 
     def test_remove_metadata(self):
         self.test_docx.remove_metadata()
-        root = self.test_docx.xml_content.getroottree().getroot()
-        for elt in root:
-            self.assertEqual(len(elt.text), 0)
+        root = self.test_docx.xml.xml_contents['docProps/core.xml'] \
+            .getroottree().getroot()
+        self.assertTrue(len(root) == 0)
 
         self.test_xlsx.remove_metadata()
-        root = self.test_xlsx.xml_content.getroottree().getroot()
-        for elt in root:
-            self.assertEqual(len(elt.text), 0)
+        root = self.test_xlsx.xml.xml_contents['docProps/core.xml'] \
+            .getroottree().getroot()
+        self.assertTrue(len(root) == 0)
 
     def test_save(self):
         self.test_docx.remove_metadata()

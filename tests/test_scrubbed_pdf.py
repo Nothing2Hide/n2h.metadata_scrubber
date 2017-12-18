@@ -2,12 +2,13 @@ import os
 import tempfile
 import unittest
 
-from nothing2hide.metadata.core.scrubber.pdf import PdfFile
+from nothing2hide.metadata.core.scrubber import PdfFile
 
 here = os.path.abspath(os.path.dirname(__file__))
 
 
 class TestPdfFile(unittest.TestCase):
+
     def setUp(self):
         self.test_pdf_filename = os.path.join(here, "data", "pdf", "n2h.pdf")
         self.test_pdf = PdfFile(self.test_pdf_filename)
