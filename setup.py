@@ -58,6 +58,8 @@ setup(name='n2h.metadata_scrubber',
       extras_require=extras_require,
       entry_points="""
       # -*- Entry points: -*-
+      [console_scripts]
+      scrubbertk = n2h.metadata_scrubber.gui:main
       """,
       )
 
