@@ -2,7 +2,7 @@ import os
 import tempfile
 import unittest
 
-from nothing2hide.metadata.core.scrubber import PdfFile
+from n2h.metadata_scrubber.scrubber import PdfFile
 
 here = os.path.abspath(os.path.dirname(__file__))
 

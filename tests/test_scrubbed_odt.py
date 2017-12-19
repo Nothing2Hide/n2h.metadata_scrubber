@@ -5,7 +5,7 @@ import zipfile
 import shutil
 from lxml import etree
 
-from nothing2hide.metadata.core.scrubber import OdtFile
+from n2h.metadata_scrubber.scrubber import OdtFile
 
 here = os.path.abspath(os.path.dirname(__file__))
 
