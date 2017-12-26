@@ -10,6 +10,7 @@ class ScrubberGui:
     def __init__(self):
         self.window = tk.Tk()
         self.window.title = "Metadata scrubber"
+        self.window.attributes('-type', 'dialog')
         self.lbl_default = "No file selected"
         self.file_label = tk.Label(self.window,
                                    text=self.lbl_default, width=50)
