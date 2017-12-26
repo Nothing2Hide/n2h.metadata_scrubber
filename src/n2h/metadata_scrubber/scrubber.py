@@ -5,10 +5,15 @@ import os
 import zipfile
 import tempfile
 import shutil
+import mimetypes
 
 from lxml import etree
 from PIL import Image
 import pdfrw
+
+
+class MimeTypeNotFoundError(Exception):
+    pass
 
 
 class XMLFile:
@@ -17,11 +22,13 @@ class XMLFile:
         self.filename = filename
         self.xml_contents = {}
         self.inner_files = []
+
+    def open(self):
         try:
-            self.unziped = zipfile.ZipFile(filename)
+            self.unziped = zipfile.ZipFile(self.filename)
         except zipfile.BadZipFile:
             raise ValueError("{} is not a correct docx file."
-                             .format(filename))
+                             .format(self.filename))
 
     def rescue_xml(self, filename):
         xml_content = etree.fromstring(
@@ -47,6 +54,9 @@ class XMLFile:
                     xml_out.write(os.path.join(tmp_dir, filename), filename)
             shutil.rmtree(tmp_dir)
 
+    def close(self):
+        self.unziped.close()
+
 
 class DocxFile:
 
@@ -66,6 +76,12 @@ class DocxFile:
     def save(self, outfile=None):
         self.xml.save(outfile)
 
+    def open(self):
+        self.xml.open()
+
+    def close(self):
+        self.xml.close()
+
 
 class OdtFile:
 
@@ -84,6 +100,12 @@ class OdtFile:
 
     def save(self, outfile=None):
         self.xml.save(outfile)
+
+    def open(self):
+        self.xml.open()
+
+    def close(self):
+        self.xml.close()
 
 
 class ImageFile:
@@ -117,6 +139,12 @@ class PdfFile:
         self.pdf_file = pdfrw.PdfFileReader(self.pdf_filename)
         self.metadata = []
 
+    def open(self):
+        pass
+
+    def close(self):
+        pass
+
     def rescue_metadata(self):
         if '/Info' in self.pdf_file.keys():
             self.metadata = [
@@ -125,6 +153,7 @@ class PdfFile:
         return self.metadata
 
     def remove_metadata(self, exclude=None):
+        self.rescue_metadata()
         exclude = exclude if exclude else []
         for metadata in self.metadata:
             if metadata not in exclude:
@@ -138,5 +167,31 @@ class PdfFile:
         pdfrw.PdfWriter().write(fname=outfile, trailer=self.pdf_file)
         return(outfile)
 
+
+def guess_file_class(filename):
+    mimetype = mimetypes.MimeTypes().guess_type(filename)[0]
+    mimetypes_association = {
+        "application/vnd.oasis.opendocument.text": OdtFile,
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": DocxFile,  # NOQA
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document": DocxFile,  # NOQA
+        "application/pdf": PdfFile,
+        "image/png": ImageFile,
+        "image/jpeg": ImageFile
+    }
+    File = mimetypes_association.get(mimetype, None)
+    if File is None:
+        raise MimeTypeNotFoundError("Mimetype %s not found" % mimetype)
+    return File
+
+
+def remove_metadata(filename):
+    try:
+        File = guess_file_class(filename)
+    except MimeTypeNotFoundError as error:
+        raise error
+    file_ = File(filename)
+    file_.open()
+    file_.remove_metadata()
+    file_.save()
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4

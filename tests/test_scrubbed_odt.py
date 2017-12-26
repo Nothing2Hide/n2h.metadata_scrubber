@@ -15,10 +15,15 @@ class TestDocxFile(unittest.TestCase):
     def setUp(self):
         test_odt_filename = os.path.join(here, "data", "odt", "ffc.odt")
         self.test_bad_filename = os.path.join(here, "data", "pdf", "n2h.pdf")
+        self.test_bad_file = OdtFile(self.test_bad_filename)
         self.test_odt = OdtFile(test_odt_filename)
+        self.test_odt.open()
+
+    def tearDown(self):
+        self.test_odt.close()
 
     def test_init(self):
-        self.assertRaises(ValueError, OdtFile, self.test_bad_filename)
+        self.assertRaises(ValueError, self.test_bad_file.open)
 
     def test_remove_metadata(self):
         self.test_odt.remove_metadata()

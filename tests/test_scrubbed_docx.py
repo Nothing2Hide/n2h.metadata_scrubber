@@ -16,11 +16,18 @@ class TestDocxFile(unittest.TestCase):
         test_docx_filename = os.path.join(here, "data", "docx", "test.docx")
         test_xlsx_filename = os.path.join(here, "data", "docx", "test.xlsx")
         self.test_bad_filename = os.path.join(here, "data", "pdf", "n2h.pdf")
+        self.test_bad_file = DocxFile(self.test_bad_filename)
         self.test_docx = DocxFile(test_docx_filename)
         self.test_xlsx = DocxFile(test_xlsx_filename)
+        self.test_docx.open()
+        self.test_xlsx.open()
+
+    def tearDown(self):
+        self.test_docx.close()
+        self.test_xlsx.close()
 
     def test_init(self):
-        self.assertRaises(ValueError, DocxFile, self.test_bad_filename)
+        self.assertRaises(ValueError, self.test_bad_file.open)
 
     def test_remove_metadata(self):
         self.test_docx.remove_metadata()
