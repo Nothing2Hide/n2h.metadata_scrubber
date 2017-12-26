@@ -40,7 +40,7 @@ class XMLFile:
     def save(self, outfile=None):
         if outfile is None:
             path, file_ = os.path.split(self.filename)
-            outfile = os.path.join(path, "EDITED_%s" % file_)
+            outfile = os.path.join(path, "scrubbed_%s" % file_)
         if self.xml_contents:
             tmp_dir = tempfile.mkdtemp()
             self.unziped.extractall(tmp_dir)
@@ -126,10 +126,9 @@ class ImageFile:
 
     def save(self, outfile=None):
         if not outfile:
-            outfile = "{}/scrubbed_{}".format(
-                os.path.dirname(self.pdf_filename),
-                os.path.basename(self.pdf_filename))
-        self.img_wo_metadata.save('image_file_without_exif.jpeg')
+            path, file_ = os.path.split(self.img_filename)
+            outfile = os.path.join(path, "scrubbed_%s" % file_)
+        self.img_wo_metadata.save(outfile)
 
 
 class PdfFile:
@@ -161,9 +160,8 @@ class PdfFile:
 
     def save(self, outfile=None):
         if not outfile:
-            outfile = os.path.dirname(self.pdf_filename) + \
-                "/scrubbed_" + \
-                os.path.basename(self.pdf_filename)
+            path, file_ = os.path.split(self.pdf_filename)
+            outfile = os.path.join(path, "scrubbed_%s" % file_)
         pdfrw.PdfWriter().write(fname=outfile, trailer=self.pdf_file)
         return(outfile)
 
