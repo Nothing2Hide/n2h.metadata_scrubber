@@ -2,6 +2,8 @@ import tkinter as tk
 from tkinter.filedialog import askopenfilename
 from tkinter.messagebox import showerror
 
+from n2h.metadata_scrubber.scrubber import remove_metadata
+
 
 class ScrubberGui:
 
@@ -24,7 +26,10 @@ class ScrubberGui:
 
     def remove_meta(self):
         if self.browsed_file != self.lbl_default:
-            print("removing metadate from %s ..." % self.browsed_file)
+            try:
+                remove_metadata(self.browsed_file)
+            except Exception as e:
+                showerror(e.message)
         else:
             showerror("No such file selected")
 
