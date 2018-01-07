@@ -38,9 +38,7 @@ class XMLFile:
             self.xml_contents[filename] = xml_content
 
     def save(self, outfile=None):
-        if outfile is None:
-            path, file_ = os.path.split(self.filename)
-            outfile = os.path.join(path, "scrubbed_%s" % file_)
+        outfile = outfile or default_output_filename(self.pdf_filename)
         if self.xml_contents:
             tmp_dir = tempfile.mkdtemp()
             self.unziped.extractall(tmp_dir)
@@ -125,9 +123,7 @@ class ImageFile:
         self.img_wo_metadata.putdata(self.img.getdata())
 
     def save(self, outfile=None):
-        if not outfile:
-            path, file_ = os.path.split(self.img_filename)
-            outfile = os.path.join(path, "scrubbed_%s" % file_)
+        outfile = outfile or default_output_filename(self.pdf_filename)
         self.img_wo_metadata.save(outfile)
 
 
@@ -159,9 +155,7 @@ class PdfFile:
                 self.pdf_file.Info.pop("/" + metadata)
 
     def save(self, outfile=None):
-        if not outfile:
-            path, file_ = os.path.split(self.pdf_filename)
-            outfile = os.path.join(path, "scrubbed_%s" % file_)
+        outfile = outfile or default_output_filename(self.pdf_filename)
         pdfrw.PdfWriter().write(fname=outfile, trailer=self.pdf_file)
         return(outfile)
 
@@ -191,5 +185,12 @@ def remove_metadata(filename):
     file_.open()
     file_.remove_metadata()
     file_.save()
+
+
+def default_output_filename(filename):
+    path, file_ = os.path.split(filename)
+    outfile = os.path.join(path, "scrubbed_%s" % file_)
+    return outfile
+
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
