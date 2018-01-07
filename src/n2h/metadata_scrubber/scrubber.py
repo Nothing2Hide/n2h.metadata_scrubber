@@ -176,7 +176,7 @@ def guess_file_class(filename):
     return File
 
 
-def remove_metadata(filename):
+def remove_metadata(filename, outfile=None):
     try:
         File = guess_file_class(filename)
     except MimeTypeNotFoundError as error:
@@ -184,7 +184,7 @@ def remove_metadata(filename):
     file_ = File(filename)
     file_.open()
     file_.remove_metadata()
-    file_.save()
+    file_.save(outfile=outfile)
 
 
 def default_output_filename(filename):
