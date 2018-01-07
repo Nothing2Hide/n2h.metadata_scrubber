@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter.filedialog import askopenfilename
-from tkinter.messagebox import showerror
+from tkinter.messagebox import showerror, showinfo
 
 from n2h.metadata_scrubber.scrubber import remove_metadata
 
@@ -30,9 +30,11 @@ class ScrubberGui:
             try:
                 remove_metadata(self.browsed_file)
             except Exception as e:
-                showerror(e.message)
+                showerror(title="Error", message=e.message)
+            else:
+                showinfo(title="Sucess", message="File scrubbed")
         else:
-            showerror("No such file selected")
+            showerror(title="Error", message="No such file selected")
 
     def browse(self):
         # tk.Tk().withdraw()
