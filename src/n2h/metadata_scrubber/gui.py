@@ -19,21 +19,24 @@ class ScrubberGui:
         self.browsed_file = None
 
         self.saveas_label = tk.Label(self.window,
-                                     text=self.lbl_savesas, width=50)
+                                     text=self.lbl_savesas)
         self.file_label = tk.Label(self.window,
-                                   text=self.lbl_default, width=50)
+                                   text=self.lbl_default)
         self.browse_btn = tk.Button(self.window, text="Browse",
                                     command=self.browse)
-        self.rm_btn = tk.Button(self.window, text="Remove",
+        self.rm_btn = tk.Button(self.window, text="Remove", width=0,
                                 command=self.remove_meta, state=tk.DISABLED)
         self.saveas_btn = tk.Button(self.window, text="Save as",
                                     command=self.saveas, state=tk.DISABLED)
 
-        self.file_label.grid(sticky=tk.E, padx=5, pady=5)
-        self.saveas_label.grid(sticky=tk.E, padx=5, pady=5)
-        self.browse_btn.grid(row=0, column=1, padx=5, pady=5)
-        self.rm_btn.grid(row=0, column=2, padx=5, pady=5)
-        self.saveas_btn.grid(row=1, column=1, columnspan=2, padx=5, pady=5)
+        self.window.grid_rowconfigure(0, weight=1)
+        self.window.grid_columnconfigure(0, weight=1)
+        self.file_label.grid(sticky='nw', padx=5, pady=5)
+        self.saveas_label.grid(sticky='nw', padx=5, pady=5)
+        self.browse_btn.grid(sticky='ne', row=0, column=1, padx=5, pady=5)
+        self.saveas_btn.grid(sticky='ne', row=1, column=1, padx=5, pady=5)
+        self.rm_btn.grid(sticky='sw', row=2, column=0, columnspan=2, padx=5,
+                         pady=5)
 
     def display(self):
         self.window.mainloop()
