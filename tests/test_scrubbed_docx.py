@@ -3,7 +3,7 @@ import os
 import tempfile
 import zipfile
 import shutil
-from lxml import etree
+from xml.etree import ElementTree as etree
 
 from n2h.metadata_scrubber.scrubber import DocxFile
 
@@ -32,12 +32,12 @@ class TestDocxFile(unittest.TestCase):
     def test_remove_metadata(self):
         self.test_docx.remove_metadata()
         root = self.test_docx.xml.xml_contents['docProps/core.xml'] \
-            .getroottree().getroot()
+            .getchildren()
         self.assertTrue(len(root) == 0)
 
         self.test_xlsx.remove_metadata()
         root = self.test_xlsx.xml.xml_contents['docProps/core.xml'] \
-            .getroottree().getroot()
+            .getchildren()
         self.assertTrue(len(root) == 0)
 
     def test_save(self):
@@ -47,7 +47,7 @@ class TestDocxFile(unittest.TestCase):
         self.test_docx.save(save_filename)
         unziped = zipfile.ZipFile(save_filename)
         xml_content = etree.fromstring(unziped.read('docProps/core.xml'))
-        root = xml_content.getroottree().getroot()
+        root = xml_content.getchildren()
         for elt in root:
             self.assertIsNone(elt.text)
         shutil.rmtree(tmp_dir)
@@ -58,7 +58,7 @@ class TestDocxFile(unittest.TestCase):
         self.test_xlsx.save(save_filename)
         unziped = zipfile.ZipFile(save_filename)
         xml_content = etree.fromstring(unziped.read('docProps/core.xml'))
-        root = xml_content.getroottree().getroot()
+        root = xml_content.getchildren()
         for elt in root:
             self.assertIsNone(elt.text)
         shutil.rmtree(tmp_dir)

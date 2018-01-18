@@ -96,3 +96,7 @@ class ScrubberGui:
 def main():
     gui = ScrubberGui()
     gui.display()
+
+
+if __name__ == "__main__":
+    main()

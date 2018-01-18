@@ -7,7 +7,7 @@ import tempfile
 import shutil
 import mimetypes
 
-from lxml import etree
+from xml.etree import ElementTree as etree
 from PIL import Image
 import pdfrw
 
@@ -67,9 +67,8 @@ class DocxFile:
         self.xml.rescue_xml(self.meta_file)
         if self.xml.xml_contents:
             content = self.xml.xml_contents[self.meta_file]
-            root = content.getroottree().getroot()
-            for elt in root:
-                root.remove(elt)
+            for elt in content.getchildren():
+                content.remove(elt)
 
     def save(self, outfile=None):
         self.xml.save(outfile)
@@ -92,9 +91,9 @@ class OdtFile:
         self.xml.rescue_xml(self.meta_file)
         if self.xml.xml_contents:
             content = self.xml.xml_contents[self.meta_file]
-            root = content.getroottree().getroot()
-            for elt in root.find("office:meta", root.nsmap):
-                elt.getparent().remove(elt)
+            root = content.getchildren()[0]
+            for elt in root.getchildren():
+                root.remove(elt)
 
     def save(self, outfile=None):
         self.xml.save(outfile)

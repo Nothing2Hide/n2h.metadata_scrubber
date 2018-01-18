@@ -3,7 +3,7 @@ import os
 import tempfile
 import zipfile
 import shutil
-from lxml import etree
+from xml.etree import ElementTree as etree
 
 from n2h.metadata_scrubber.scrubber import OdtFile
 
@@ -28,8 +28,8 @@ class TestDocxFile(unittest.TestCase):
     def test_remove_metadata(self):
         self.test_odt.remove_metadata()
         root = self.test_odt.xml.xml_contents['meta.xml'] \
-            .getroottree().getroot()
-        self.assertTrue(len(root.find("office:meta", root.nsmap)) == 0)
+            .getchildren()[0]
+        self.assertTrue(len(root.getchildren()) == 0)
 
     def test_save(self):
         self.test_odt.remove_metadata()
@@ -38,6 +38,6 @@ class TestDocxFile(unittest.TestCase):
         self.test_odt.save(save_filename)
         unziped = zipfile.ZipFile(save_filename)
         xml_content = etree.fromstring(unziped.read('meta.xml'))
-        root = xml_content.getroottree().getroot()
-        self.assertTrue(len(root.find("office:meta", root.nsmap)) == 0)
+        root = xml_content.getchildren()[0]
+        self.assertTrue(len(root.getchildren()) == 0)
         shutil.rmtree(tmp_dir)
