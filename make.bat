@@ -32,3 +32,5 @@ if "%1" == "installer" (
 	if errorlevel 1 exit /b 1
 	goto end
 )
+
+:end
