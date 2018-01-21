@@ -40,4 +40,7 @@ class TestDocxFile(unittest.TestCase):
         xml_content = etree.fromstring(unziped.read('meta.xml'))
         root = xml_content.getchildren()[0]
         self.assertTrue(len(root.getchildren()) == 0)
-        shutil.rmtree(tmp_dir)
+        try:
+            shutil.rmtree(tmp_dir)
+        except PermissionError:
+            pass

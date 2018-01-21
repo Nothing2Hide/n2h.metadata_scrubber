@@ -41,7 +41,10 @@ class TestPdfFile(unittest.TestCase):
         self.test_pdf.save(outfile=test_tmp_file.name)
         tmp_file_metadata = PdfFile(test_tmp_file.name).rescue_metadata()
         self.assertListEqual(tmp_file_metadata, [])
-        os.remove(test_tmp_file.name)
+        try:
+            os.remove(test_tmp_file.name)
+        except PermissionError:
+            pass
 
     def test_save_erase(self):
         self.test_pdf.rescue_metadata()
@@ -49,4 +52,7 @@ class TestPdfFile(unittest.TestCase):
         new_pdf_file_name = self.test_pdf.save()
         tmp_file_metadata = PdfFile(new_pdf_file_name).rescue_metadata()
         self.assertListEqual(tmp_file_metadata, [])
-        os.remove(new_pdf_file_name)
+        try:
+            os.remove(new_pdf_file_name)
+        except PermissionError:
+            pass

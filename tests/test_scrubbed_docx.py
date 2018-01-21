@@ -50,7 +50,10 @@ class TestDocxFile(unittest.TestCase):
         root = xml_content.getchildren()
         for elt in root:
             self.assertIsNone(elt.text)
-        shutil.rmtree(tmp_dir)
+        try:
+            shutil.rmtree(tmp_dir)
+        except PermissionError:
+            pass
 
         self.test_xlsx.remove_metadata()
         tmp_dir = tempfile.mkdtemp()
@@ -61,4 +64,7 @@ class TestDocxFile(unittest.TestCase):
         root = xml_content.getchildren()
         for elt in root:
             self.assertIsNone(elt.text)
-        shutil.rmtree(tmp_dir)
+        try:
+            shutil.rmtree(tmp_dir)
+        except PermissionError:
+            pass
