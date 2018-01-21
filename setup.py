@@ -30,6 +30,7 @@ extras_require = {'test': ['setuptools',
                            'pytest-cov',
                            'flake8',
                            ],
+                  'development': ['pyinstaller']
                   }
 
 # setup(name='nothing2hide.metadata.core',

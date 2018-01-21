@@ -1,3 +1,4 @@
+import pkg_resources  # NOQA
 import tkinter as tk
 from tkinter.filedialog import askopenfilename, asksaveasfilename
 from tkinter.messagebox import showerror, showinfo
