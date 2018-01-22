@@ -38,7 +38,7 @@ class XMLFile:
             self.xml_contents[filename] = xml_content
 
     def save(self, outfile=None):
-        outfile = outfile or default_output_filename(self.pdf_filename)
+        outfile = outfile or default_output_filename(self.filename)
         if self.xml_contents:
             tmp_dir = tempfile.mkdtemp()
             self.unziped.extractall(tmp_dir)
@@ -122,7 +122,7 @@ class ImageFile:
         self.img_wo_metadata.putdata(self.img.getdata())
 
     def save(self, outfile=None):
-        outfile = outfile or default_output_filename(self.pdf_filename)
+        outfile = outfile or default_output_filename(self.img_filename)
         self.img_wo_metadata.save(outfile)
 
 
