@@ -13,13 +13,13 @@ class ScrubberGui:
     def __init__(self):
         self.window = tk.Tk()
         self.window.title = "Metadata scrubber"
-        self.lbl_savesas = ""
+        self.lbl_savesas_default = ""
         self.lbl_default = "No file selected"
         self.saveas_file = None
         self.browsed_file = None
 
         self.saveas_label = tk.Label(self.window,
-                                     text=self.lbl_savesas)
+                                     text=self.lbl_savesas_default)
         self.file_label = tk.Label(self.window,
                                    text=self.lbl_default)
         self.browse_btn = tk.Button(self.window, text="Browse",
@@ -49,6 +49,7 @@ class ScrubberGui:
                 showerror(title="Error", message=str(error))
             else:
                 showinfo(title="Sucess", message="File scrubbed")
+                self.clear()
         else:
             showerror(title="Error", message="No such file selected")
 
@@ -81,12 +82,18 @@ class ScrubberGui:
         if self.browsed_file:
             self.saveas_btn['state'] = tk.NORMAL
 
+    def disable_rm_btn(self):
+        self.rm_btn['state'] = tk.DISABLED
+
+    def disable_saveas_btn(self):
+        self.saveas_btn['state'] = tk.DISABLED
+
     def update_file_label(self, text):
-        if text:
+        if text is not None:
             self.file_label['text'] = text
 
     def update_saveas_label(self, text):
-        if text:
+        if text is not None:
             self.saveas_label['text'] = text
 
     def fill_default_output_filename(self):
@@ -94,6 +101,14 @@ class ScrubberGui:
             self.update_saveas_label(
                 default_output_filename(self.browsed_file)
             )
+
+    def clear(self):
+        self.update_saveas_label(self.lbl_savesas_default)
+        self.update_file_label(self.lbl_default)
+        self.saveas_file = None
+        self.browsed_file = None
+        self.disable_rm_btn()
+        self.disable_saveas_btn()
 
 
 def main():
