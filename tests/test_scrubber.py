@@ -5,7 +5,9 @@ import zipfile
 import shutil
 from xml.etree import ElementTree as etree
 
-from n2h.metadata_scrubber.scrubber import OdtFile, PdfFile, DocxFile
+from n2h.metadata_scrubber.scrubber import (
+    OdtFile, PdfFile, DocxFile, remove_metadata, default_output_filename
+)
 
 here = os.path.abspath(os.path.dirname(__file__))
 
@@ -13,7 +15,8 @@ here = os.path.abspath(os.path.dirname(__file__))
 class TestPdfFile(unittest.TestCase):
 
     def setUp(self):
-        self.test_pdf_filename = os.path.join(here, "data", "pdf", "n2h.pdf")
+        self.test_pdf_filename = os.path.join(here, "data", "dirty",
+                                              "dirty_1.pdf")
         self.test_pdf = PdfFile(self.test_pdf_filename)
 
     def test_init(self):
@@ -64,8 +67,9 @@ class TestPdfFile(unittest.TestCase):
 class TestOdtFile(unittest.TestCase):
 
     def setUp(self):
-        test_odt_filename = os.path.join(here, "data", "odt", "ffc.odt")
-        self.test_bad_filename = os.path.join(here, "data", "pdf", "n2h.pdf")
+        test_odt_filename = os.path.join(here, "data", "dirty", "dirty_1.odt")
+        self.test_bad_filename = os.path.join(here, "data", "dirty",
+                                              "dirty_0.pdf")
         self.test_bad_file = OdtFile(self.test_bad_filename)
         self.test_odt = OdtFile(test_odt_filename)
         self.test_odt.open()
@@ -100,9 +104,12 @@ class TestOdtFile(unittest.TestCase):
 class TestDocxFile(unittest.TestCase):
 
     def setUp(self):
-        test_docx_filename = os.path.join(here, "data", "docx", "test.docx")
-        test_xlsx_filename = os.path.join(here, "data", "docx", "test.xlsx")
-        self.test_bad_filename = os.path.join(here, "data", "pdf", "n2h.pdf")
+        test_docx_filename = os.path.join(here, "data", "dirty",
+                                          "dirty_1.docx")
+        test_xlsx_filename = os.path.join(here, "data", "dirty",
+                                          "dirty_0.xlsx")
+        self.test_bad_filename = os.path.join(here, "data", "dirty",
+                                              "dirty_0.pdf")
         self.test_bad_file = DocxFile(self.test_bad_filename)
         self.test_docx = DocxFile(test_docx_filename)
         self.test_xlsx = DocxFile(test_xlsx_filename)
@@ -155,3 +162,25 @@ class TestDocxFile(unittest.TestCase):
             shutil.rmtree(tmp_dir)
         except PermissionError:
             pass
+
+
+class TestAllType(unittest.TestCase):
+
+    def setUp(self):
+        self.data_path = os.path.join(here, 'data')
+        self.dirty_data_path = os.path.join(self.data_path, 'dirty')
+        self.clean_data_path = os.path.join(self.data_path, 'scrubbed')
+        self.dirty_filenames = os.listdir(self.dirty_data_path)
+        self.clean_filenames = os.listdir(self.clean_data_path)
+
+    def test_all(self):
+        for filename in self.dirty_filenames:
+            tmp_dir = tempfile.mkdtemp()
+            tmp_filename = os.path.join(tmp_dir, filename)
+            remove_metadata(os.path.join(self.dirty_data_path, filename),
+                            tmp_filename)
+            self.assertTrue(
+                os.path.getsize(default_output_filename(
+                    os.path.join(self.clean_data_path, filename)
+                )), os.path.getsize(tmp_filename)
+            )

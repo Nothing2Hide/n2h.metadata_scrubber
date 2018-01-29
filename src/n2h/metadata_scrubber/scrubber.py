@@ -16,7 +16,7 @@ class MimeTypeNotFoundError(Exception):
     pass
 
 
-class XMLFile:
+class ZippedXMLFile:
 
     def __init__(self, filename):
         self.filename = filename
@@ -60,7 +60,7 @@ class DocxFile:
 
     def __init__(self, docx_filename):
         self.filename = docx_filename
-        self.xml = XMLFile(docx_filename)
+        self.xml = ZippedXMLFile(docx_filename)
         self.meta_file = "docProps/core.xml"
 
     def remove_metadata(self):
@@ -84,7 +84,7 @@ class OdtFile:
 
     def __init__(self, odt_filename):
         self.filename = odt_filename
-        self.xml = XMLFile(odt_filename)
+        self.xml = ZippedXMLFile(odt_filename)
         self.meta_file = "meta.xml"
 
     def remove_metadata(self):
@@ -165,6 +165,7 @@ def guess_file_class(filename):
         "application/vnd.oasis.opendocument.text": OdtFile,
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": DocxFile,  # NOQA
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document": DocxFile,  # NOQA
+        "application/vnd.openxmlformats-officedocument.presentationml.presentation": DocxFile,  # NOQA
         "application/pdf": PdfFile,
         "image/png": ImageFile,
         "image/jpeg": ImageFile

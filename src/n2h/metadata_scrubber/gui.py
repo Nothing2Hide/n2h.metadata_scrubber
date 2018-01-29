@@ -1,14 +1,14 @@
-import pkg_resources  # NOQA
-import tkinter as tk
-from tkinter.filedialog import askopenfilename, asksaveasfilename
-from tkinter.messagebox import showerror, showinfo
+import pkg_resources  # NOQA  # pragma: no cover
+import tkinter as tk  # pragma: no cover
+from tkinter.filedialog import askopenfilename, asksaveasfilename  # pragma: no cover
+from tkinter.messagebox import showerror, showinfo  # pragma: no cover
 
 from n2h.metadata_scrubber.scrubber import (remove_metadata,
                                             default_output_filename,
-                                            )
+                                            )  # pragma: no cover
 
 
-class ScrubberGui:
+class ScrubberGui:  # pragma: no cover
 
     def __init__(self):
         self.window = tk.Tk()
@@ -111,10 +111,10 @@ class ScrubberGui:
         self.disable_saveas_btn()
 
 
-def main():
+def main():  # pragma: no cover
     gui = ScrubberGui()
     gui.display()
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     main()
