@@ -6,7 +6,8 @@ import shutil
 from xml.etree import ElementTree as etree
 
 from n2h.metadata_scrubber.scrubber import (
-    OdtFile, PdfFile, DocxFile, remove_metadata, default_output_filename
+    OdtFile, PdfFile, DocxFile, remove_metadata, default_output_filename,
+    directory_scrubber
 )
 
 here = os.path.abspath(os.path.dirname(__file__))
@@ -184,3 +185,15 @@ class TestAllType(unittest.TestCase):
                     os.path.join(self.clean_data_path, filename)
                 )), os.path.getsize(tmp_filename)
             )
+
+    def test_directory(self):
+        tmp_dir = tempfile.mkdtemp()
+        directory_scrubber(self.dirty_data_path, tmp_dir)
+        self.assertSetEqual(
+            set(self.dirty_filenames),
+            set(os.listdir(tmp_dir))
+        )
+        try:
+            shutil.rmtree(tmp_dir)
+        except PermissionError:
+            pass

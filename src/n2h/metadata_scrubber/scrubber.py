@@ -187,10 +187,34 @@ def remove_metadata(filename, outfile=None):
     file_.save(outfile=outfile)
 
 
+def directory_scrubber(directory_path, output_directory=None):
+    output_directory = output_directory or \
+        default_output_directory(directory_path)
+    os.makedirs(output_directory, exist_ok=True)
+    if not os.path.exists(directory_path):
+        raise OSError('%s path not found.' % directory_path)
+    if not os.path.isdir(directory_path):
+        raise OSError('%s is not a directory.' % directory_path)
+    contents = os.listdir(directory_path)
+    for element in contents:
+        full_filename = os.path.join(directory_path, element)
+        if not os.path.isfile(full_filename):
+            continue
+        out_filename = os.path.join(output_directory, element)
+        try:
+            remove_metadata(full_filename, out_filename)
+        except MimeTypeNotFoundError:
+            pass
+
+
 def default_output_filename(filename):
     path, file_ = os.path.split(filename)
     outfile = os.path.join(path, "scrubbed_%s" % file_)
     return outfile
 
+
+def default_output_directory(path, create=True):
+    default_directory = "scrubbed"
+    return os.path.join(path, default_directory)
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
