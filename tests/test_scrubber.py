@@ -185,6 +185,10 @@ class TestAllType(unittest.TestCase):
                     os.path.join(self.clean_data_path, filename)
                 )), os.path.getsize(tmp_filename)
             )
+        try:
+            shutil.rmtree(tmp_dir)
+        except PermissionError:
+            pass
 
     def test_directory(self):
         tmp_dir = tempfile.mkdtemp()
