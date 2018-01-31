@@ -11,7 +11,7 @@ from n2h.metadata_scrubber.scrubber import (remove_metadata,
                                             default_output_directory,
                                             )  # pragma: no cover
 
-here = os.path.abspath(os.path.dirname(__file__))
+here = os.path.abspath(os.path.dirname(__file__))  # pragma: no cover
 
 
 class ScrubberGui:  # pragma: no cover
@@ -66,7 +66,8 @@ class ScrubberGui:  # pragma: no cover
         self.browsed_directory = askdirectory(
             title="Open a directory to clean",
         )
-        self.display_directory()
+        if self.browsed_directory:
+            self.display_directory()
 
     def command_open_files(self):
         # TODO define better filetypes
@@ -75,7 +76,8 @@ class ScrubberGui:  # pragma: no cover
             title="Open a file(s) to clean",
             filetypes=filetypes
         )
-        self.display_files()
+        if self.browsed_files:
+            self.display_files()
 
     def command_open_file(self):
         # TODO define better filetypes
@@ -84,7 +86,8 @@ class ScrubberGui:  # pragma: no cover
             title="Open a file to clean",
             filetypes=filetypes
         )
-        self.display_file()
+        if self.browsed_file:
+            self.display_file()
 
     def display_directory(self):
         self.window_clean()
