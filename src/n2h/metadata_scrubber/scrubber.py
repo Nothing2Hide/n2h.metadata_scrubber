@@ -10,6 +10,7 @@ import mimetypes
 from xml.etree import ElementTree as etree
 from PIL import Image
 import pdfrw
+import mutagen
 
 
 class MimeTypeNotFoundError(Exception):
@@ -159,6 +160,34 @@ class PdfFile:
         return(outfile)
 
 
+class AudioFile:
+
+    def __init__(self, audio_filename):
+        self.audio_filename_default = audio_filename
+        _, audio_filename_ = os.path.split(audio_filename)
+        self.work_directory = tempfile.mkdtemp()
+        self.audio_filename = os.path.join(self.work_directory,
+                                           audio_filename_)
+        shutil.copyfile(audio_filename, self.audio_filename)
+
+    def open(self):
+        self.audio_file = mutagen.File(self.audio_filename)
+
+    def close(self):
+        try:
+            shutil.rmtree(self.work_directory)
+        except PermissionError:
+            pass
+
+    def remove_metadata(self):
+        self.audio_file.delete()
+
+    def save(self, outfile=None):
+        outfile = outfile or default_output_filename(self.audio_filename)
+        self.audio_file.save()
+        shutil.copy(self.audio_filename, outfile)
+
+
 def guess_file_class(filename):
     mimetype = mimetypes.MimeTypes().guess_type(filename)[0]
     mimetypes_association = {
@@ -168,7 +197,10 @@ def guess_file_class(filename):
         "application/vnd.openxmlformats-officedocument.presentationml.presentation": DocxFile,  # NOQA
         "application/pdf": PdfFile,
         "image/png": ImageFile,
-        "image/jpeg": ImageFile
+        "image/jpeg": ImageFile,
+        "audio/mpeg": AudioFile,
+        "audio/x-flac": AudioFile,
+        "audio/ogg": AudioFile,
     }
     File = mimetypes_association.get(mimetype, None)
     if File is None:
