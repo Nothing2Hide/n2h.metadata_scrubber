@@ -116,7 +116,7 @@ class ImageFile:
         self.img = Image.open(self.img_filename)
 
     def close(self):
-        self.img = Image.close()
+        self.img.close()
 
     def remove_metadata(self):
         self.img_wo_metadata = Image.new(self.img.mode, self.img.size)
@@ -217,6 +217,7 @@ def remove_metadata(filename, outfile=None):
     file_.open()
     file_.remove_metadata()
     file_.save(outfile=outfile)
+    file_.close()
 
 
 def directory_scrubber(directory_path, output_directory=None):
