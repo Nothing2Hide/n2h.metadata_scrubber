@@ -1,4 +1,12 @@
+# Required imports for pyinstaller
 import pkg_resources  # NOQA  # pragma: no cover
+import six  # pragma: no cover
+import appdirs  # pragma: no cover
+import packaging  # pragma: no cover
+import packaging.version  # pragma: no cover
+import packaging.specifiers  # pragma: no cover
+import packaging.requirements  # pragma: no cover
+
 import os  # pragma: no cover
 import tkinter as tk  # pragma: no cover
 from tkinter.filedialog import (askopenfilename, asksaveasfilename, askdirectory,
